@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halloween Matrix Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: lime;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+        #canvas {
+            display: block;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5em; /* Increased from 2em */
+            text-align: center;
+            color: orange;
+            background-color: rgba(0, 0, 0, 0.7); /* Added background */
+            padding: 20px; /* Added padding */
+            border-radius: 10px; /* Optional: rounded corners */
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="message"></div>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const messageDiv = document.getElementById('message');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initializeDrops();
+    });
+
+    const letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+
+    const fontSize = 20; // Increased from 16
+    let columns = canvas.width / fontSize;
+
+    let drops = [];
+
+    function initializeDrops() {
+        columns = canvas.width / fontSize;
+        drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = canvas.height / fontSize;
+        }
+    }
+
+    initializeDrops();
+
+    function drawMatrix() {
+        context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        context.fillStyle = '#0F0'; // Green text
+        context.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            context.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+
+            drops[i]++;
+        }
+    }
+
+    let animationInterval;
+    let isAnimating = false;
+
+    function startMatrixAnimation() {
+        messageDiv.style.display = 'none';
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        initializeDrops();
+        clearInterval(animationInterval);
+        animationInterval = setInterval(drawMatrix, 33);
+    }
+
+    function stopMatrixAnimation() {
+        clearInterval(animationInterval);
+    }
+
+    function showRandomMessage() {
+        const messages = [
+            "You’re in for a treat – or maybe a trick!",
+			"Tonight, you might just meet a friendly ghost!",
+			"If you hear a door creak, it’s not the wind!",
+			"A spooky surprise awaits you – keep an eye out!",
+			"Beware: candy wrappers might come to life tonight!",
+			"The stars say a funny scare is coming your way!",
+			"Someone or something mysterious is thinking of you!",
+			"Don’t trust every shadow you see tonight!",
+			"A black cat will cross your path – it’s a good sign!",
+			"Pumpkins may wink at you tonight, so watch closely!",
+			"Tonight, the moon is smiling just for you!",
+			"You’re going to have a hair-raising good time!",
+			"A skeleton might just give you a thumbs-up!",
+			"Tonight is the perfect night for a little magic!",
+			"Expect a surprise around the corner – if you dare!",
+			"The ghosts say you’re in for a fun night!",
+			
+			"Tonight, you may feel an extra chill under your blanket – could it be a friendly ghost tucking you in?",
+			"Your pillow holds secrets – listen closely, and you might hear a whisper!",
+			"A mysterious comfort will guide you to the sweetest dreams tonight!",
+			"Tonight, if you wake up suddenly, it might just be a ghostly lullaby!",
+			"Beware of any bumps under your mattress – a tiny trickster might be hiding there!",
+			"The spirits say your bed will feel extra cozy... but don’t peek under it!",
+			"A midnight breeze may ruffle your blanket – as if a ghost is watching over you!",
+			"Tonight, your bed may feel like it’s floating... or is it just your imagination?",
+			"A shadow near your pillow might be looking out for you!",
+			"Don’t be surprised if your dreams feel a little more... crowded!",
+			"Tonight, you’ll feel as if you’re floating on a cloud – or is it a ghostly cushion?",
+			"If your pillow feels heavier tonight, it might be sharing space with a friendly spirit!",
+			"A surprise awaits under your bed – but it’s only there if you look!",
+			"Tonight, you may hear a quiet sigh from your mattress, as if it’s dreaming too!",
+			"Your bed will feel extra soft – as if enchanted for a night of magical sleep!",
+			"If you wake up to find your blanket slightly moved... it’s just a friendly ghost making you cozy!",
+            "Your future holds... more candy than you can handle!",
+            "Beware! Tonight, the spirits are extra mischievous!",
+            "You will meet a black cat who brings you luck!",
+            "What do witches put on to go trick-or-treating? Mas-scare-a!",
+            "Ghosts have been spotted in your neighborhood!",
+            "A full moon brings out the werewolves tonight!",
+            "Look behind you! Just kidding... or am I?",
+            "You will have a spook-tacular Halloween!",
+            "What is a vampire's favorite fruit? A blood orange!",
+            "This Halloween, the veil between worlds is thin... stay alert!",
+            "Why did the ghost go into the bar? For the boos!",
+            "You are in for a frightfully fun night!",
+            "The witching hour approaches... prepare your broomsticks!",
+            "What do you call a fat pumpkin? A plumpkin!",
+            "A spooky surprise awaits you this evening!",
+            "Beware of things that go bump in the night!",
+            "Your costume will be the talk of the town!",
+            "What kind of music do mummies listen to? Wrap music!",
+            "Knock, knock! Who's there? Boo. Boo who? Don't cry, it's just a joke!",
+            "Why are vampires so easy to fool? Because they're suckers!",
+            "You will discover a hidden talent tonight!",
+            "May your candy supply last longer than your sugar rush!",
+            "Why did the vampire read the newspaper? He heard it had great circulation!",
+            "Something wicked this way comes... or maybe it's just the pizza delivery guy!",
+            "Expect the unexpected tonight!",
+            "Why don't mummies take vacations? They're afraid they'll relax and unwind!",
+            "A mysterious stranger will bring you good fortune!",
+            "What do you get when you cross a snowman and a vampire? Frostbite!"
+        ];
+
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        messageDiv.innerHTML = randomMessage;
+        messageDiv.style.display = 'block';
+    }
+
+    function startSequence() {
+        if (isAnimating) return;
+        isAnimating = true;
+        startMatrixAnimation();
+        const randomTime = Math.random() * 4000 + 1000; // Between 1 and 5 seconds
+        setTimeout(() => {
+            stopMatrixAnimation();
+            showRandomMessage();
+            isAnimating = false;
+        }, randomTime);
+    }
+
+    startSequence();
+
+    document.addEventListener('click', () => {
+        startSequence();
+    });
+</script>
+
+</body>
+</html>
